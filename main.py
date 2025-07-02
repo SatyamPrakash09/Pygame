@@ -26,7 +26,7 @@ while True:
         dt = datetime.fromtimestamp(ts, tz = ist)
         formated = dt.strftime("%d-%B-%Y, %I:%M:%S %p IST")
         
-        print(f"ISS Current Info: \n latitude: {lat}, longitude: {lon}, \n velocity: {velocity}, timestamp:{formated}")
+        print(f"ISS Current Info: \n latitude: {lat}, longitude: {lon}, \n velocity: {velocity}kmph, timestamp:{formated}")
         iss.goto(lon, lat)
         iss.pendown()
     except requests.exceptions.RequestException as e:
