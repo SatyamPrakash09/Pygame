@@ -72,7 +72,7 @@ The window will display a planetary system with moving orbits and labels.
 ## 👤 Author
 
 **Satyam Prakash**  
-📧 Email: [satyamprakashhp09@gmail.com](mailto:satyamprakashhp09@gmail.com)  
+📧 Email: [satyamprakashhp09@gmail.com](satyamprakashhp09@gmail.com)  
 💼 GitHub: [SatyamPrakash09](https://github.com/SatyamPrakash09)
 
 ---
