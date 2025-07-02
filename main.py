@@ -1,3 +1,42 @@
+import turtle
+import time
+import requests
+from datetime import datetime , timezone, timedelta
+
+screen = turtle.Screen()
+screen.setup(720, 360)
+screen.setworldcoordinates(-180, -90, 180, 90)
+screen.bgpic("world.png")
+screen.register_shape("iss.gif")
+
+iss = turtle.Turtle()
+iss.shape("iss.gif")
+iss.penup()
+
+while True:
+    try:
+        response = requests.get("https://api.wheretheiss.at/v1/satellites/25544")
+        data = response.json()
+        print(response.text)
+        lat = data["latitude"]
+        lon = data["longitude"]
+        velocity = data["velocity"]
+        ts = data["timestamp"]
+        ist = timezone(timedelta(hours=5, minutes=30))
+        dt = datetime.fromtimestamp(ts, tz = ist)
+        formated = dt.strftime("%d-%B-%Y, %I:%M:%S %p IST")
+        
+        print(f"ISS Current Info: \n latitude: {lat}, longitude: {lon}, \n velocity: {velocity}, timestamp:{formated}")
+        iss.goto(lon, lat)
+        iss.pendown()
+    except requests.exceptions.RequestException as e:
+        print("API error:", e)
+        time.sleep(10)
+        continue
+    print("\n")
+    time.sleep(3)
+
+
 ##import ISS_Info
 ##import turtle
 ##import time
@@ -19,55 +58,55 @@
 ##    print("Position: \n latitude: {}, longitude: {}".format(lat,lon))
 ##    iss.goto(float(lon),float(lat))
 ##    iss.pendown()
-##    time.sleep(10)
-
-from skyfield.api import load, wgs84, EarthSatellite
-import turtle
-import time
-from datetime import timedelta
-
-
-# Load TLE data for ISS
-stations_url = 'http://celestrak.org/NORAD/elements/stations.txt'
-satellites = load.tle_file(stations_url)
-by_name = {sat.name: sat for sat in satellites}
-iss = by_name['ISS (ZARYA)']
-
-# Setup turtle screen
-screen = turtle.Screen()
-screen.setup(720, 360)
-screen.setworldcoordinates(-180, -90, 180, 90)
-screen.bgpic("world.png")
-screen.register_shape("iss.gif")
-
-iss_marker = turtle.Turtle()
-iss_marker.shape("iss.gif")
-iss_marker.penup()
-
-path_marker = turtle.Turtle()
-path_marker.color("red")
-path_marker.penup()
-
-# Draw predicted path
-ts = load.timescale()
-now = ts.now()
-
-for minutes_ahead in range(0, 91, 5):  # Next 90 minutes, every 5 minutes
-    t = ts.utc(now.utc_datetime() + timedelta(minutes=minutes_ahead))
-    geocentric = iss.at(t)
-    subpoint = wgs84.subpoint(geocentric)
-    lat = subpoint.latitude.degrees
-    lon = subpoint.longitude.degrees
-    path_marker.goto(lon, lat)
-    path_marker.dot(2)  # draw small dot for path
-
-# Show real-time position
-while True:
-    t = ts.now()
-    geocentric = iss.at(t)
-    subpoint = wgs84.subpoint(geocentric)
-    lat = subpoint.latitude.degrees
-    lon = subpoint.longitude.degrees
-    print(f"Current ISS position: lat={lat}, lon={lon}")
-    iss_marker.goto(lon, lat)
-    time.sleep(5)
+##    time.sleep(5)
+##
+####from skyfield.api import load, wgs84, EarthSatellite
+##import turtle
+##import time
+##from datetime import timedelta
+##
+##
+### Load TLE data for ISS
+##stations_url = 'http://celestrak.org/NORAD/elements/stations.txt'
+##satellites = load.tle_file(stations_url)
+##by_name = {sat.name: sat for sat in satellites}
+##iss = by_name['ISS (ZARYA)']
+##
+### Setup turtle screen
+##screen = turtle.Screen()
+##screen.setup(720, 360)
+##screen.setworldcoordinates(-180, -90, 180, 90)
+##screen.bgpic("world.png")
+##screen.register_shape("iss.gif")
+##
+##iss_marker = turtle.Turtle()
+##iss_marker.shape("iss.gif")
+##iss_marker.penup()
+##
+##path_marker = turtle.Turtle()
+##path_marker.color("red")
+##path_marker.penup()
+##
+### Draw predicted path
+##ts = load.timescale()
+##now = ts.now()
+##
+##for minutes_ahead in range(0, 91, 5):  # Next 90 minutes, every 5 minutes
+##    t = ts.utc(now.utc_datetime() + timedelta(minutes=minutes_ahead))
+##    geocentric = iss.at(t)
+##    subpoint = wgs84.subpoint(geocentric)
+##    lat = subpoint.latitude.degrees
+##    lon = subpoint.longitude.degrees
+##    path_marker.goto(lon, lat)
+##    path_marker.dot(2)  # draw small dot for path
+##
+### Show real-time position
+##while True:
+##    t = ts.now()
+##    geocentric = iss.at(t)
+##    subpoint = wgs84.subpoint(geocentric)
+##    lat = subpoint.latitude.degrees
+##    lon = subpoint.longitude.degrees
+##    print(f"Current ISS position: lat={lat}, lon={lon}")
+##    iss_marker.goto(lon, lat)
+##    time.sleep(5)
