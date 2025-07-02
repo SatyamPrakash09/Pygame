@@ -17,7 +17,6 @@ while True:
     try:
         response = requests.get("https://api.wheretheiss.at/v1/satellites/25544")
         data = response.json()
-        print(response.text)
         lat = data["latitude"]
         lon = data["longitude"]
         velocity = data["velocity"]
