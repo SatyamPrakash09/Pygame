@@ -2,6 +2,14 @@ import turtle
 import time
 import requests
 from datetime import datetime , timezone, timedelta
+import os
+import csv
+
+filename = "iss_data.csv"
+if not os.path.exists(filename):
+    with open (filename, "w", newline="") as fin:
+        writer = csv.writer(fin)
+        writer.writerow(["Timestamp", "Latitude", "Longitude", "Velocity (kmph)"])
 
 screen = turtle.Screen()
 screen.setup(720, 360)
@@ -26,6 +34,11 @@ while True:
         formated = dt.strftime("%d-%B-%Y, %I:%M:%S %p IST")
         
         print(f"ISS Current Info: \n latitude: {lat}, longitude: {lon}, \n velocity: {velocity}kmph, timestamp:{formated}")
+        #entering data in csv file
+        with open(filename, "a", newline="") as fin:
+            writer = csv.writer(fin)
+            writer.writerow([formated, lat, lon, velocity])
+            
         iss.goto(lon, lat)
         iss.pendown()
     except requests.exceptions.RequestException as e:
